@@ -4,12 +4,13 @@
 %--------------------------------------------------------------------------
 % Project: Example - Jumps Actuated Bouncing Ball under Attack as a 
 %           Two-Player Zero-Sum Hybrid Game
+% Author: Santiago Jimenez Leudo
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
 %   Make sure to install HyEQ Toolbox (Beta) at
 %   https://www.mathworks.com/matlabcentral/fileexchange/102239-hybrid-equations-toolbox-beta 
 %   Copyright @ Hybrid Systems Laboratory (HSL),
-%   Revision: 0.0.0.1 Date: 01/22/2022 20:00:00
+%   Revision: 0.0.0.2 Date: 01/23/2022 9:45:00
 
 clear all
 clc

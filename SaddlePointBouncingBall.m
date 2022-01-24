@@ -4,12 +4,13 @@
 %--------------------------------------------------------------------------
 % Project: Example - Jumps Actuated Bouncing Ball under Attack as a 
 %           Two-Player Zero-Sum Hybrid Game - Saddle Point Behavior
+% Author: Santiago Jimenez Leudo
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
 %   Make sure to install HyEQ Toolbox (Beta) at
 %   https://www.mathworks.com/matlabcentral/fileexchange/102239-hybrid-equations-toolbox-beta 
 %   Copyright @ Hybrid Systems Laboratory (HSL),
-%   Revision: 0.0.0.1 Date: 01/22/2022 20:00:00
+%   Revision: 0.0.0.2 Date: 01/23/2022 9:45:00
 
 %   Run ExJumpsActBouncingBallUnderAttack.m
 %   This M-file is called therein
@@ -17,47 +18,6 @@
 %%% System Evolution + Cost Computation
 % --------------------------------------------------------------
 %
-% --------------------------------------------------------------
-%%% Optimal Trajectory
-
-% Initial State
-x(:,1)=x0;      %Optimal Trayectory
-
-% Optimal Input
-ud1opt(1)=ud1f(x(:,1));
-ud2opt(1)=ud2f(x(:,1));
-
-%Initial Costs
-J(1)=0;
-
-jp=0;   %Discrete time for optimal solution
-        
-for i=1:size(t,2)-1
-    if jp <=JSPAN(2)
-        if x(1,i)<=0.01 && x(2,i)<=0    % Check if x is in the Jump Set with some tolerance
-            J(i)=J(i)+Ld(x(:,i),[ud1opt(i),ud2opt(i)]);         % Add Discrete Cost
-            x(:,i)=g(x(:,i),[ud1opt(i); ud2opt(i)],gammad);     % Evolve via jump
-            jp=jp+1;                                            % Report a jump
-            
-            x(:,i+1)=x(:,i)+(t(i+1)-t(i))*f(x(:,i),uC,gammac);  % Evolve via flow
-            J(i+1)=J(i)+(t(i+1)-t(i))*Lc(x(:,i),uC);            % Add Continuous Cost
-            
-        else                            % x is in the Flow set
-            x(:,i+1)=x(:,i)+(t(i+1)-t(i))*f(x(:,i),uC,gammac); 	% Evolve via flow
-            J(i+1)=J(i)+(t(i+1)-t(i))*Lc(x(:,i),uC);            % Add Continuous Cost
-        end
-        ud1opt(i+1)=ud1f(x(:,i+1));     % Update Input P1 for next time step
-        ud2opt(i+1)=ud2f(x(:,i+1));     % Update Input P2 for next time step
-    end
-end
-
-% Store variables after finishing the simulation
-
-phik=x;
-uk=ud1opt;
-wk=ud2opt;
-Jk=J;
-
 % --------------------------------------------------------------     
 %%% Variation in inputs to diplay saddle behavior in the cost of continuous
 %%% solutions
@@ -74,8 +34,8 @@ for indexu=1:k
         xt(:,1)=x0;     %Perturbed Trajectory
         
         % Perturbed Input
-        ud1nopt(1)=epsilonu*ud1f(x(:,1));
-        ud2nopt(1)=epsilonw*ud2f(x(:,1));
+        ud1nopt(1)=epsilonu*ud1f(xt(:,1));
+        ud2nopt(1)=epsilonw*ud2f(xt(:,1));
         
         %Initial Cost
         Jt(1)=0;

@@ -3,12 +3,13 @@
 % Filename: Ex1D2PZeroSumHyGame.m
 %--------------------------------------------------------------------------
 % Project: Example - 1D Linear Quadratic Hybrid Game with Nonunique Solutions
+% Author: Santiago Jimenez Leudo
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
-%   See also HyEQ Toolbox
-%   https://hybrid.soe.ucsc.edu/software  
+%   Make sure to install HyEQ Toolbox (Beta) at
+%   https://www.mathworks.com/matlabcentral/fileexchange/102239-hybrid-equations-toolbox-beta 
 %   Copyright @ Hybrid Systems Laboratory (HSL),
-%   Revision: 0.0.0.1 Date: 01/22/2022 20:00:00
+%   Revision: 0.0.0.2 Date: 01/23/2022 9:45:00
 
 clear all
 clc 
@@ -25,11 +26,12 @@ t=0:0.001:TSPAN(2);
 %%% Continuous Dynamics
 %f(x,uC)=a*x+b*uC     Flow Map
 %b=[b1;b2];
-%C=[0,2]              Flow Set
+%C=[0,delta]              Flow Set
 %uC=(uc1,uc2)         Continuos Input
 a=-1;
 b1=1;
 b2=1;
+delta=2;
 
 %%% Stage Cost during Flows
 Q=1;  
@@ -39,8 +41,10 @@ Lc=@(x,u1,u2) x^2*Q+u1^2*R1+u2^2*R2;
 
 
 %%% Discrete Dynamics
-%g(x,uD)=0.5
-%D={1}
+%g(x,uD)=sigma
+%D={mu}
+sigma=0.5;
+mu=1;
 
 %%% Stage Cost during Jumps
 P=0.4481;
@@ -58,7 +62,7 @@ V=@(x) P*x^2;
 
 
 %%% Initial State 
-x0 = 2;
+xi = 2;
 
 
 % --------------------------------------------------------------
@@ -72,19 +76,19 @@ for jump=[0 1] %Run the continuous solution when j=0 and
         clear x uc1 uc2 J
     end
        
-    x(1)=x0;                % Initial State
+    x(1)=xi;                % Initial State
     uc1(1)=-b1*P*x(1)/R1;   % Intial Input Player P1
     uc2(1)=-b2*P*x(1)/R2;   % Intial Input Player P2
     J(1)=0;                 % Initial Cost
     
     for i=1:length(t)-1
-        if abs(x(i)-1)>=0.01    % Check if x is in the Flow Set
+        if abs(x(i)-mu)>=0.01 && 0<=x(i)<=2    % Check if x is in the Flow Set
             x(i+1)=x(i)+(t(i+1)-t(i))*(a*x(i)+b1*uc1(i)+b2*uc2(i)); % Evolve via flow
             J(i+1)=J(i)+(t(i+1)-t(i))*(Lc(x(i),uc1(i),uc2(i)));     % Add Continuous Cost
         else                    % Check if x is in the Jump Set
             if jump==1          % Hybrid Solution
                 J(i)=J(i)+Ld(x(i));     % Add Discrete Cost
-                x(i)=0.5;               % Evolve via jump
+                x(i)=sigma;             % Evolve via jump
                 uc1(i)=-b1*P*x(i)/R1;   % Update Input P1 for flow
                 uc2(i)=-b2*P*x(i)/R2;   % Update Input P2 for flow
             end
@@ -126,8 +130,9 @@ solcost=HybridSolution(t',jv',Jh');                     % Cost of Hybrid Solutio
 %
 clf
 figure (1)
-set(0,'defaultfigurecolor',[1 1 1])                 % White Bakground
+set(0,'defaultfigurecolor',[1 1 1])                 
 set(0,'defaulttextinterpreter','latex')
+set(gcf,'color','w');
 
 plot_builder_bb = HybridPlotBuilder();
 
@@ -184,7 +189,7 @@ plot_builder_bb.flowColor('#017daa') ...            % Set Plot Properties
 hold on
 ck=plot(t,Jk, 'color', '#3f9f38')                   % Plot Cost of Continuous Solution
 hold on
-V0=V(x0);
+V0=V(xi);
 X=V0*ones(1,length(t));
 vf=plot(t,X, 'color', 'black');                     % Estimated Optimal Cost 
 set(gca,'TickLabelInterpreter','latex')
