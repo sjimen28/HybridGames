@@ -19,7 +19,7 @@ Run 'Ex1D2PZeroSumHyGame.m'
 
 It will create a simulation for the hybrid system in (19) for the following 
 parameters:
-  a=-1,
+  $a=-1$,
   b_1=b_2-1,
   \delta=\xi=2,
   \mu=1,
