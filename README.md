@@ -39,7 +39,7 @@ As a result,
     time '(t,jv)', and running cost 'Jh' when jumps are trigger at x=\mu;
   - it will create the continuous solution '(phik, uk,wk)', with time 't', 
     and running cost 'Jk' when it evolves from x=\mu via flow;
-  - it will generate a plot including:
+  - it will generate a plot (Figure 1) including:
       1. Response of hybrid solution (blue and red) and response of continuous 
           solution (green).
       2. Input actions of hybrid solution (blue and red) and input actions of 
@@ -67,7 +67,7 @@ As a result,
   - it will create the hybrid system in (44), calling it 'system_bb' as an
     instance of 'BouncingBallZSGame.m', which invokes the class 'HybridSystem'
     of the HyEQ Toolbox (see line 83); 
-  - it will generate a plot including:
+  - it will generate a plot (Figure 2) including:
       1. Position of optimal solution,
       2. Velocity of optimal solution,
       3. Optimal input control action,
@@ -78,6 +78,6 @@ As a result,
     time '(t,jt)', and running cost 'Jt', by running 'SaddlePointBouncingBall.m'.
     Therein, the optimal feedbak laws are multiplied by varying factors,
     epsilonu and epsilonw, calculating the cost associated by this scalation,
-    and generating a plot in 3D of the behavior of the cost vs the scalation factors.
+    and generating a plot in 3D (Figure 3) of the behavior of the cost vs the scalation factors.
     See in red the optimal cost and the saddle behavior around it.
         
