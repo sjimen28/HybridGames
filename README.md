@@ -5,7 +5,8 @@ Optimality and Asymptotic Stability in Two-Player Zero-Sum Hybrid Games
 Author: Santiago Jimenez Leudo
 Revision: 0.0.0.1 Date: 01/23/2022 9:45:00
 
-Requirements: Install HyEQ Toolbox (Beta) v3.0.0.22 either by double clicking 
+Requirements: Matlab (Developed in R2020b)
+Install HyEQ Toolbox (Beta) v3.0.0.22 either by double clicking 
 on the 'Hybrid Equations Toolbox' file or by downloading it from 
 https://www.mathworks.com/matlabcentral/fileexchange/102239-hybrid-equations-toolbox-beta
 
