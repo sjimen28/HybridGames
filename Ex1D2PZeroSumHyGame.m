@@ -6,10 +6,10 @@
 % Author: Santiago Jimenez Leudo
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
-%   Make sure to install HyEQ Toolbox (Beta) at
+%   Make sure to install HyEQ Toolbox (Beta) v3.0.0.22 at
 %   https://www.mathworks.com/matlabcentral/fileexchange/102239-hybrid-equations-toolbox-beta 
 %   Copyright @ Hybrid Systems Laboratory (HSL),
-%   Revision: 0.0.0.2 Date: 01/23/2022 9:45:00
+%   Revision: 0.0.0.3 Date: 01/24/2022 17:30:00
 
 clear all
 clc 
