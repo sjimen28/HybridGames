@@ -105,7 +105,7 @@ for i=1:size(sol_bb.t,1)-1
 end
 
 % Create Hybrid Trajectory for Cost by using HyEQ Toolbox
-solcost=HybridSolution(sol_bb.t,sol_bb.j,J');
+solcost=HybridArc(sol_bb.t,sol_bb.j,J');
 
 %
 % --------------------------------------------------------------
@@ -138,12 +138,12 @@ plot_builder_bb.flowColor('#017daa') ...            $ Set Plot Properties
 
 subplot(5,1,3)
 plot_builder_bb.flowColor('#017daa') ...            $ Set Plot Properties
-    .slice([1])...
+    .slice(2)...
     .labels('$u_{\kappa 1}$') ...
     .configurePlots(@apply_plot_settings)...
     .autoSubplots('off')...
     .jumpColor('#e43d43')...
-    .plotFlows(sol_bb, @(x) 2*lambda*Rd2*x(2)/((1+2*Rd1)*(1+2*Rd2)-1));
+    .plotFlows(sol_bb, @(x2) 2*lambda*Rd2*x2/((1+2*Rd1)*(1+2*Rd2)-1));
                                                     % Control Action
 
 subplot(5,1,4)
@@ -152,7 +152,7 @@ plot_builder_bb.flowColor('#017daa') ...            $ Set Plot Properties
     .configurePlots(@apply_plot_settings)...
     .autoSubplots('off')...
     .jumpColor('#e43d43')...
-    .plotFlows(sol_bb, @(x) 2*lambda*Rd1*x(2)/((1+2*Rd1)*(1+2*Rd2)-1))...
+    .plotFlows(sol_bb, @(x2) 2*lambda*Rd1*x2/((1+2*Rd1)*(1+2*Rd2)-1))...
                                                     % Attacker's Action
 subplot(5,1,5)
 plot_builder_bb.flowColor('#017daa') ...            $ Set Plot Properties
@@ -160,6 +160,7 @@ plot_builder_bb.flowColor('#017daa') ...            $ Set Plot Properties
     .configurePlots(@apply_plot_settings)...
     .autoSubplots('off')...
     .jumpColor('#e43d43')...
+    .slice(1)...
     .plotFlows(solcost)                             % Cost of Solution
 hold on
 V0=V(x0);
@@ -173,9 +174,8 @@ axis([0 14 0 2])
 
 run('SaddlePointBouncingBall.m')
 
-function apply_plot_settings(component)
+function apply_plot_settings(ax, component)
     xlabel('')
-    ax = gca;
     ax.TickLabelInterpreter='latex';
     ax.LineWidth=0.25;
 end

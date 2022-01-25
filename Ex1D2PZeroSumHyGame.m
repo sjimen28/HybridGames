@@ -118,10 +118,10 @@ end
 
 jv=[linspace(0,0,jj-1), linspace(1,1,size(t,2)-jj+1)];  % Discrete Time 
 
-solphih=HybridSolution(t',jv',phih');                   % Hybrid Response
-soluh=HybridSolution(t',jv',uh');                       % P1 Action for Hybrid Solution
-solwh=HybridSolution(t',jv',wh');                       % P2 Action for Hybrid Solution
-solcost=HybridSolution(t',jv',Jh');                     % Cost of Hybrid Solution
+solphih=HybridArc(t',jv',phih');                   % Hybrid Response
+soluh=HybridArc(t',jv',uh');                       % P1 Action for Hybrid Solution
+solwh=HybridArc(t',jv',wh');                       % P2 Action for Hybrid Solution
+solcost=HybridArc(t',jv',Jh');                     % Cost of Hybrid Solution
 
 %
 % --------------------------------------------------------------
@@ -199,9 +199,8 @@ plot_builder_bb.addLegendEntry(ck,'$J(2,u_\kappa)$');
 plot_builder_bb.addLegendEntry(vf,'$J^*(2)$');
 
 
-function apply_plot_settings(component)
+function apply_plot_settings(ax, component)
 xlabel('$t$ [s]')
-ax = gca;
 ax.TickLabelInterpreter='latex';
 ax.LineWidth=0.25;
 end
