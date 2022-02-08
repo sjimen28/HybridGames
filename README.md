@@ -3,7 +3,7 @@ Simulation M-files for examples in HSCC'22 paper:  Sufficient Conditions for
 Optimality and Asymptotic Stability in Two-Player Zero-Sum Hybrid Games
 
 Author: Santiago Jimenez Leudo
-Revision: 0.0.0.1 Date: 01/23/2022 9:45:00
+Revision: 0.0.0.2 Date: 02/07/2022 18:00:00
 https://github.com/sjimen28/HybridGames
 
 Requirements: Matlab (Developed in R2020b)
