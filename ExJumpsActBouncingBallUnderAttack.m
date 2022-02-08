@@ -7,10 +7,11 @@
 % Author: Santiago Jimenez Leudo
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
-%   Make sure to install HyEQ Toolbox (Beta) v3.0.0.22 at
+%   Make sure to install HyEQ Toolbox (Beta) v3.0.0.22 from
 %   https://www.mathworks.com/matlabcentral/fileexchange/102239-hybrid-equations-toolbox-beta 
+%   (View Version History) 
 %   Copyright @ Hybrid Systems Laboratory (HSL),
-%   Revision: 0.0.0.3 Date: 01/24/2022 9:45:00
+%   Revision: 00.0.0.4 Date: 02/07/2022 17:20:00
 
 clear all
 clc
@@ -18,10 +19,12 @@ clc
 % --------------------------------------------------------------
 %%% Initialization
 % --------------------------------------------------------------
+%   Paremeters: Ac, Bc1, Bc2, gammac, lambda, RD1, RD2, QD, x0
+%   Modify any parameter in this section to simulate the system/case of interest
 
 % Simulation Horizon
-TSPAN=[0 30];
-JSPAN = [0 12];
+TSPAN=[0 30];   %Second entry is the maximum amount of seconds allowed
+JSPAN = [0 12]; %Second entry is the maximum amount of jumps allowed
 Ts=0.01;        %Steptime
 t=0:Ts:TSPAN(2);
 
@@ -156,7 +159,7 @@ plot_builder_bb.flowColor('#017daa') ...            $ Set Plot Properties
                                                     % Attacker's Action
 subplot(5,1,5)
 plot_builder_bb.flowColor('#017daa') ...            $ Set Plot Properties
-    .labels('$J$') ...
+    .labels('$\mathcal{J}$') ...
     .configurePlots(@apply_plot_settings)...
     .autoSubplots('off')...
     .jumpColor('#e43d43')...
@@ -167,10 +170,13 @@ V0=V(x0);
 X=V0*ones(1,length(sol_bb.t));
 vf=plot(sol_bb.t,X, 'color', 'black');              % Estimated Optimal Cost 
 set(gca,'TickLabelInterpreter','latex')
-yticks([0 0.5 1 V0])
-yticklabels({'0' '0.5' '1' '$V([1;1])$'})
 xlabel('$t$ [s]')
-axis([0 14 0 2])
+if x0 == [1,1]
+    yticks([0 0.5 1 V0])
+    yticklabels({'0' '0.5' '1' '$V([1;1])$'})
+    axis([0 14 0 2])
+end
+
 
 run('SaddlePointBouncingBall.m')
 

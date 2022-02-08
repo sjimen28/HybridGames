@@ -1,7 +1,7 @@
 classdef BouncingBallZSGame < HybridSystem
 
-    properties          %Make them match with the global declaration
-        gravity = 1;
+    properties          %Make sure they match the global declaration
+        gravity = 1;    %gammac
         lambda = 0.8;
         Rd1=10;
         Rd2=-20;

@@ -6,22 +6,26 @@
 % Author: Santiago Jimenez Leudo
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
-%   Make sure to install HyEQ Toolbox (Beta) v3.0.0.22 at
+%   Make sure to install HyEQ Toolbox (Beta) v3.0.0.22 from
 %   https://www.mathworks.com/matlabcentral/fileexchange/102239-hybrid-equations-toolbox-beta 
+%   (View Version History) 
 %   Copyright @ Hybrid Systems Laboratory (HSL),
-%   Revision: 0.0.0.3 Date: 01/24/2022 17:30:00
+%   Revision: 0.0.0.4 Date: 02/07/2022 17:20:00
 
 clear all
 clc 
 % --------------------------------------------------------------
 %%% Initialization
 % --------------------------------------------------------------
-%
+%   Paremeters: a, b1, b2, delta, QC, RC1, RC2, sigma, mu, P, xi 
+%   Modify any parameter in this section to simulate the system/case of interest
+
 
 % Simulation Horizon
-TSPAN=[0 3];
-JSPAN = [0 20];
-t=0:0.001:TSPAN(2);
+TSPAN=[0 3];    %Second entry is the maximum amount of seconds allowed
+JSPAN = [0 20]; %Second entry is the maximum amount of jumps allowed
+Ts=0.001;        %Steptime
+t=0:Ts:TSPAN(2);
 
 %%% Continuous Dynamics
 %f(x,uC)=a*x+b*uC     Flow Map
@@ -34,10 +38,10 @@ b2=1;
 delta=2;
 
 %%% Stage Cost during Flows
-Q=1;  
-R1=1.304;
-R2=-4;
-Lc=@(x,u1,u2) x^2*Q+u1^2*R1+u2^2*R2;
+QC=1;  
+RC1=1.304;
+RC2=-4;
+Lc=@(x,u1,u2) x^2*QC+u1^2*RC1+u2^2*RC2;
 
 
 %%% Discrete Dynamics
@@ -77,8 +81,8 @@ for jump=[0 1] %Run the continuous solution when j=0 and
     end
        
     x(1)=xi;                % Initial State
-    uc1(1)=-b1*P*x(1)/R1;   % Intial Input Player P1
-    uc2(1)=-b2*P*x(1)/R2;   % Intial Input Player P2
+    uc1(1)=-b1*P*x(1)/RC1;   % Intial Input Player P1
+    uc2(1)=-b2*P*x(1)/RC2;   % Intial Input Player P2
     J(1)=0;                 % Initial Cost
     
     for i=1:length(t)-1
@@ -89,16 +93,16 @@ for jump=[0 1] %Run the continuous solution when j=0 and
             if jump==1          % Hybrid Solution
                 J(i)=J(i)+Ld(x(i));     % Add Discrete Cost
                 x(i)=sigma;             % Evolve via jump
-                uc1(i)=-b1*P*x(i)/R1;   % Update Input P1 for flow
-                uc2(i)=-b2*P*x(i)/R2;   % Update Input P2 for flow
+                uc1(i)=-b1*P*x(i)/RC1;   % Update Input P1 for flow
+                uc2(i)=-b2*P*x(i)/RC2;   % Update Input P2 for flow
             end
             x(i+1)=x(i)+(t(i+1)-t(i))*(a*x(i)+b1*uc1(i)+b2*uc2(i)); % Evolve via flow after jump
             J(i+1)=J(i)+(t(i+1)-t(i))*Lc(x(i),uc1(i),uc2(i));
             jj=i;                       % Save index of jump
         end
         
-        uc1(i+1)=-b1*P*x(i+1)/R1;       % Update Input P1 for next time step
-        uc2(i+1)=-b2*P*x(i+1)/R2;       % Update Input P2 for next time step     
+        uc1(i+1)=-b1*P*x(i+1)/RC1;       % Update Input P1 for next time step
+        uc2(i+1)=-b2*P*x(i+1)/RC2;       % Update Input P2 for next time step     
     end
     
     if jump==0 % Store Continuous Solution Data 
@@ -110,14 +114,16 @@ for jump=[0 1] %Run the continuous solution when j=0 and
         phih=x;
         uh=uc1;
         wh=uc2;
-        Jh=J;
+        Jh=J;       
     end
 end
 
 % Create Hybrid Solution by using HyEQ Toolbox
-
-jv=[linspace(0,0,jj-1), linspace(1,1,size(t,2)-jj+1)];  % Discrete Time 
-
+if exist('jj')
+    jv=[linspace(0,0,jj-1), linspace(1,1,size(t,2)-jj+1)];  % Discrete Time 
+else
+    jv=linspace(0,0,size(t,2));  % No jumps     
+end
 solphih=HybridArc(t',jv',phih');                   % Hybrid Response
 soluh=HybridArc(t',jv',uh');                       % P1 Action for Hybrid Solution
 solwh=HybridArc(t',jv',wh');                       % P2 Action for Hybrid Solution
@@ -179,12 +185,12 @@ ylabel('$u_C$','Interpreter','Latex')
 
 subplot(3,1,3)
 plot_builder_bb.flowColor('#017daa') ...            % Set Plot Properties
-    .legend('$J(\xi,u_h)$')...
-    .labels('$J$') ...
+    .legend('$\mathcal{J}(\xi,u_h)$')...
+    .labels('$\mathcal{J}$') ...
     .configurePlots(@apply_plot_settings)...
     .autoSubplots('off')...
     .jumpColor('#e43d43')...
-    .legend('$J(2,u_h)$','Location', 'southeast')...
+    .legend('$\mathcal{J}(2,u_h)$','Location', 'southeast')...
     .plotFlows(solcost)                             % Plot Cost of Hybrid Solution
 hold on
 ck=plot(t,Jk, 'color', '#3f9f38')                   % Plot Cost of Continuous Solution
@@ -193,14 +199,18 @@ V0=V(xi);
 X=V0*ones(1,length(t));
 vf=plot(t,X, 'color', 'black');                     % Estimated Optimal Cost 
 set(gca,'TickLabelInterpreter','latex')
-yticks([0 .5 1 1.5 V0])
-yticklabels({'0' '0.5' '1' '1.5' '$V(2)$'})
-plot_builder_bb.addLegendEntry(ck,'$J(2,u_\kappa)$');
-plot_builder_bb.addLegendEntry(vf,'$J^*(2)$');
+plot_builder_bb.addLegendEntry(ck,'$\mathcal{J}(2,u_\kappa)$');
+plot_builder_bb.addLegendEntry(vf,'$\mathcal{J}^*(2)$');
+if xi==2
+    yticks([0 .5 1 1.5 V0])
+    yticklabels({'0' '0.5' '1' '1.5' '$V(2)$'})
+end
+
 
 
 function apply_plot_settings(ax, component)
 xlabel('$t$ [s]')
 ax.TickLabelInterpreter='latex';
+ax.FontSize = 8;
 ax.LineWidth=0.25;
 end

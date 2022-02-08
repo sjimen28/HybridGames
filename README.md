@@ -10,6 +10,7 @@ Requirements: Matlab (Developed in R2020b)
 Install HyEQ Toolbox (Beta) v3.0.0.22 either by double clicking 
 on the 'Hybrid Equations Toolbox' file or by downloading it from 
 https://www.mathworks.com/matlabcentral/fileexchange/102239-hybrid-equations-toolbox-beta
+Look up for the right version in 'View Version History'
 
 Content: (Download as a folder and add it to the Path in Matlab)
   - Hybrid Equations Toolbox 
@@ -25,7 +26,7 @@ Run 'Ex1D2PZeroSumHyGame.m'
 It will create a simulation for the hybrid system in (19) for the following 
 parameters:
   a=-1,
-  b_1=b_2-1,
+  b_1=b_2=1,
   \delta=\xi=2,
   \mu=1,
   \sigma=0.5,
@@ -57,7 +58,7 @@ Associated files: 'BouncingBallZSGame.m' and 'SaddlePointBouncingBall.m'
 
 It will create a simulation for the hybrid system in (44) for the following 
 parameters:
-  \delta=0.8,
+  \lambda=0.8,
   R_{D1}=10,
   R_{D2}=-20,
   Q_D=0.189,
